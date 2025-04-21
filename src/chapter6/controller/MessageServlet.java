@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
+import chapter6.beans.Message;
 import chapter6.beans.User;
 import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
@@ -70,7 +71,7 @@ public class MessageServlet extends HttpServlet {
 	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-        if (StringUtils.isEmpty(text)) {
+        if (StringUtils.isBlank(text)) {
             errorMessages.add("メッセージを入力してください");
         } else if (140 < text.length()) {
             errorMessages.add("140文字以下で入力してください");

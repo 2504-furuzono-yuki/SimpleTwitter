@@ -7,73 +7,74 @@ import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+
 public class InitApplication {
 
-	/**
-	 * シングルトン
-	 */
-	private static InitApplication instance = null;
-	/**
-	 * java.util.log.LogManagerに読み込ませるログプロパティファイル
-	 */
-	public static final String LOG_PROPERTIES_NAME = "logging.properties";
+    /**
+     * シングルトン
+     */
+    private static InitApplication instance = null;
+    /**
+     * java.util.log.LogManagerに読み込ませるログプロパティファイル
+     */
+    public static final String LOG_PROPERTIES_NAME = "logging.properties";
 
-	/**
-	 * InitApplicationのインスタンスを返す。
-	 * @return InitApplicationのインスタンス
-	 */
-	public static InitApplication getInstance() {
-		if (instance == null) {
-			instance = new InitApplication();
-		}
-		return instance;
-	}
 
-	/**
-	 * アプリケーションの初期化処理
-	 */
-	public void init() {
-		initLog();
-	}
+    /**
+     * InitApplicationのインスタンスを返す。
+     * @return InitApplicationのインスタンス
+     */
+    public static InitApplication getInstance(){
+        if( instance == null){
+            instance = new InitApplication();
+        }
+        return instance;
+    }
 
-	/**
-	 * ログの初期化
-	 */
-	private void initLog() {
+    /**
+     * アプリケーションの初期化処理
+     */
+    public void init(){
+        initLog();
+    }
 
-		InputStream in = null;
-		try {//プロパティファイルの読み込み
-			in = InitApplication.class.getClassLoader().getResourceAsStream(LOG_PROPERTIES_NAME);
-			if (in == null) {
-				System.err.println(LOG_PROPERTIES_NAME + "がクラスパスに存在しません。");
-			}//ログ設定の読み込み
-			LogManager.getLogManager().readConfiguration(in);
+    /**
+     * ログの初期化
+     */
+    private void initLog(){
 
-			//カスタムフォーマットをFileHandlerへ直接登録
-			Handler handler = new FileHandler();
-			handler.setFormatter(new LogFormatter());
-			//twitterという名前のロガーを取得
-			Logger root = Logger.getLogger("twitter");
-			root.setUseParentHandlers(false);
-			for (Handler h : root.getHandlers()) {
-				if (h instanceof FileHandler) {
-					root.removeHandler(h);
-				}
-			}
-			root.addHandler(handler);
-			//ストリームを閉じる
-			in.close();
-		//エラー処理
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+        InputStream in = null;
+        try {
+            in = InitApplication.class.getClassLoader().getResourceAsStream(LOG_PROPERTIES_NAME);
+            if (in == null) {
+                System.err.println(LOG_PROPERTIES_NAME +"がクラスパスに存在しません。");
+            }
+            LogManager.getLogManager().readConfiguration(in);
+
+            //カスタムフォーマットをFileHandlerへ直接登録
+            Handler handler = new FileHandler();
+    		handler.setFormatter(new LogFormatter());
+
+    		Logger root = Logger.getLogger("twitter");
+    		root.setUseParentHandlers(false);
+    		for (Handler h : root.getHandlers()) {
+    		    if (h instanceof FileHandler) {
+    		      root.removeHandler(h);
+    		    }
+    		}
+    		root.addHandler(handler);
+
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if( in != null ){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
