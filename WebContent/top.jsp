@@ -59,8 +59,8 @@
 				<c:forEach items="${messages}" var="message">
 					<div class="message">
 						<div class="account-name">
-							<span class="account"><c:out value="${message.account}" /></span>
-							<span class="name"><c:out value="${message.name}" /></span>
+							<span class="account"> <c:out value="${message.account}" />
+							</span>
 						</div>
 						<div class="text">
 							<c:out value="${message.text}" />
