@@ -58,10 +58,11 @@
 			<div class="messages">
 				<c:forEach items="${messages}" var="message">
 					<div class="message">
-						<div class="account-name">
-							<span class="account"> <c:out value="${message.account}" />
-							</span>
-						</div>
+						<span class="account"> <a
+							href="./?user_id=<c:out value="${message.userId}"/> "> <c:out
+									value="${message.account}" />
+						</a>
+						</span>
 						<div class="text">
 							<c:out value="${message.text}" />
 						</div>
