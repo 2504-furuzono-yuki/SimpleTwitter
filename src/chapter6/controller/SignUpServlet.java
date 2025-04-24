@@ -90,40 +90,43 @@ public class SignUpServlet extends HttpServlet {
 
 	private boolean isValid(User user, List<String> errorMessages) {
 
-			log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-			" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
 
-			String name = user.getName();
-			String account = user.getAccount();
-			String password = user.getPassword();
-			String email = user.getEmail();
+		String name = user.getName();
+		String account = user.getAccount();
+		String password = user.getPassword();
+		String email = user.getEmail();
+		User accountCheck = new UserService().select(account);
 
-			if (!StringUtils.isEmpty(name) && (20 < name.length())) {
-				errorMessages.add("名前は20文字以下で入力してください");
-			}
-			if (StringUtils.isEmpty(account)) {
-				errorMessages.add("アカウント名を入力してください");
+		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
+			errorMessages.add("名前は20文字以下で入力してください");
+		}
+		if (StringUtils.isEmpty(account)) {
+			errorMessages.add("アカウント名を入力してください");
 
-			}else if (20 < account.length()) {
-				errorMessages.add("アカウント名は20文字以下で入力してください");
-			}
+		} else if (20 < account.length()) {
+			errorMessages.add("アカウント名は20文字以下で入力してください");
+		}
 
-			// 重複をチェックしたい
-			if(new UserService().select(account)!= null) {
-				errorMessages.add("ユーザーが重複しています");
-			}
+		// 重複をチェックしたい
+		if (accountCheck != null) {
+			errorMessages.add("ユーザーが重複しています");
+		}
 
-			if (StringUtils.isEmpty(password)) {
-				errorMessages.add("パスワードを入力してください");
-			}
+		if (StringUtils.isEmpty(password)) {
+			errorMessages.add("パスワードを入力してください");
+		}
 
-			if (!StringUtils.isEmpty(email) && (50 < email.length())) {
-				errorMessages.add("メールアドレスは50文字以下で入力してください");
-			}
+		if (!StringUtils.isEmpty(email) && (50 < email.length())) {
+			errorMessages.add("メールアドレスは50文字以下で入力してください");
+		}
 
-			if (errorMessages.size() != 0) {
-				return false;
-			}
-			return true;
+		if (errorMessages.size() != 0) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -119,7 +119,7 @@ public class SettingServlet extends HttpServlet {
 		String account = user.getAccount();
 		String email = user.getEmail();
 		int id = user.getId();
-		User accountchake = new UserService().select(account);
+		User accountCheck = new UserService().select(account);
 
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
 			errorMessages.add("名前は20文字以下で入力してください");
@@ -130,7 +130,7 @@ public class SettingServlet extends HttpServlet {
 			errorMessages.add("アカウント名は20文字以下で入力してください");
 		}
 		// 重複をチェックしたい
-		if(accountchake!= null&&accountchake.getId() != id) {
+		if(accountCheck != null && accountCheck.getId() != id) {
 			errorMessages.add("ユーザーが重複しています");
 		}
 
