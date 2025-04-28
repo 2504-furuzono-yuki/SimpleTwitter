@@ -14,52 +14,162 @@ import chapter6.logging.InitApplication;
 
 public class MessageDao {
 
+	/**
+	* ロガーインスタンスの生成
+	*/
+	Logger log = Logger.getLogger("twitter");
 
-    /**
-    * ロガーインスタンスの生成
-    */
-    Logger log = Logger.getLogger("twitter");
+	/**
+	* デフォルトコンストラクタ
+	* アプリケーションの初期化を実施する。
+	*/
+	public MessageDao() {
+		InitApplication application = InitApplication.getInstance();
+		application.init();
+	}
 
-    /**
-    * デフォルトコンストラクタ
-    * アプリケーションの初期化を実施する。
-    */
-    public MessageDao() {
-        InitApplication application = InitApplication.getInstance();
-        application.init();
-    }
+	public void insert(Connection connection, Message message) {
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-    public void insert(Connection connection, Message message) {
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("INSERT INTO messages ( ");
+			sql.append("    user_id, ");
+			sql.append("    text, ");
+			sql.append("    created_date, ");
+			sql.append("    updated_date ");
+			sql.append(") VALUES ( ");
+			sql.append("    ?, "); // user_id
+			sql.append("    ?, "); // text
+			sql.append("    CURRENT_TIMESTAMP, "); // created_date
+			sql.append("    CURRENT_TIMESTAMP "); // updated_date
+			sql.append(")");
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+			ps = connection.prepareStatement(sql.toString());
 
-        PreparedStatement ps = null;
-        try {
-            StringBuilder sql = new StringBuilder();
-            sql.append("INSERT INTO messages ( ");
-            sql.append("    user_id, ");
-            sql.append("    text, ");
-            sql.append("    created_date, ");
-            sql.append("    updated_date ");
-            sql.append(") VALUES ( ");
-            sql.append("    ?, ");                  // user_id
-            sql.append("    ?, ");                  // text
-            sql.append("    CURRENT_TIMESTAMP, ");  // created_date
-            sql.append("    CURRENT_TIMESTAMP ");   // updated_date
-            sql.append(")");
+			ps.setInt(1, message.getUserId());
+			ps.setString(2, message.getText());
 
-            ps = connection.prepareStatement(sql.toString());
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		}finally {
+			close(ps);
+		}
+	}
 
-            ps.setInt(1, message.getUserId());
-            ps.setString(2, message.getText());
+	public void delete(Connection connection , String message) {
 
-            ps.executeUpdate();
-        } catch (SQLException e) {
-		log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw new SQLRuntimeException(e);
-        } finally {
-            close(ps);
-        }
-    }
+		//logを書き込んでいる
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+
+		//psという変数名を作成
+		PreparedStatement ps = null;
+
+		//messageをintに型変換する
+		int messageId = Integer.parseInt(message);
+
+		//SQLを動かす文を作成する
+		try {
+			//DELETEしたいものを指定する
+			String sql = "DELETE FROM messages WHERE id = ?";
+
+			//これからセットしたいSQL文を接続
+			ps = connection.prepareStatement(sql);
+
+			//?に入れたい値をセットする
+			ps.setInt(1, messageId);
+
+			//SQLを実行する
+			ps.executeUpdate();
+
+			return ;
+
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+	public void select(Connection connection , int messageid) {
+
+		//logを書き込んでいる
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+
+		//psという変数名を作成
+		PreparedStatement ps = null;
+
+		//SQLを動かす文を作成する
+		try {
+			//SELECTしたいものを指定する
+			String sql = "SELECT FROM messages WHERE id = ?";
+
+			//これからセットしたいSQL文を接続
+			ps = connection.prepareStatement(sql);
+
+			//?に入れたい値をセットする
+			ps.setInt(1, messageid);
+
+			//SQLを実行する
+			ps.executeUpdate();
+
+			return ;
+
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+	public void updata(Connection connection, int messageid, Message messagetext) {
+
+		//logを書き込んでいる
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+
+		//psという変数名を作成
+		PreparedStatement ps = null;
+
+		//messageをintに型変換する
+		String Text = messagetext.toString();
+		int message = Integer.parseInt(Text);
+
+		//SQLを動かす文を作成する
+		try {
+			//UPDATEしたいものを指定する
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE messages SET");
+			sql.append("    text = ?, ");
+			sql.append("WHERE id = ?");
+
+			//これからセットしたいSQL文を接続
+			ps = connection.prepareStatement(sql.toString());
+
+			//?に入れたい値をセットする
+			ps.setInt(1, message);
+			ps.setInt(2, messageid);
+
+			//SQLを実行する
+			ps.executeUpdate();
+
+			return ;
+
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 }

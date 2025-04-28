@@ -95,4 +95,106 @@ public class MessageService {
 			close(connection);
 		}
 	}
+
+	public void delete(String message) {
+
+		//Connectionを定義してあげる
+		Connection connection = null;
+
+		try {
+
+			//Connectionを定義してあげる
+			connection = getConnection();
+
+			//Messagedaoを呼び出してパラメータを渡す
+			MessageDao messagedao = new MessageDao();
+			messagedao.delete(connection, message);
+			commit(connection);
+
+			return ;
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+
+	//selectメソッドを使用する
+	public void select(int messageid) {
+
+		//Connectionを定義してあげる
+		Connection connection = null;
+
+		try {
+
+			//Connectionを定義してあげる
+			connection = getConnection();
+
+			//Messagedaoを呼び出してパラメータを渡す
+			MessageDao messagedao = new MessageDao();
+			messagedao.select(connection, messageid);
+			commit(connection);
+
+			return ;
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
+	//編集したものを更新したいためにupdataメソッドを使用する
+	public void updata(int messageid, Message messagetext) {
+
+		//logを書き込んでいる
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		//Connectionを定義してあげる
+		Connection connection = null;
+
+		try {
+
+			//Connectionを定義してあげる
+			connection = getConnection();
+
+			//Messagedaoを呼び出してパラメータを渡す
+			MessageDao messagedao = new MessageDao();
+			messagedao.updata(connection, messageid, messagetext);
+
+			commit(connection);
+
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
 }

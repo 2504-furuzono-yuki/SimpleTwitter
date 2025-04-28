@@ -70,6 +70,28 @@
 							<fmt:formatDate value="${message.createdDate}"
 								pattern="yyyy/MM/dd HH:mm:ss" />
 						</div>
+						<div class="messages">
+							<!-- DeleteMessageServletのPostメソッドに送ってる -->
+							<form action="DeleteMessage" method="post">
+								<!-- メッセージを消したいとサーバー側に値を送る -->
+								<input type="hidden" name="message" value="${message.id}" />
+								<!-- ログインしているユーザの投稿のみ表示させる -->
+								<c:if test="${loginUser.id == message.userId }">
+									<!-- 削除ボタンの実装 -->
+									<input type="submit" value="削除" />
+								</c:if>
+							</form>
+						</div>
+						<div class="messages">
+							<!-- ServletのPostメソッドに送ってる -->
+							<form action="edit" method="Get">
+								<!-- ログインしているユーザの投稿のみ表示させる -->
+								<c:if test="${loginUser.id == message.userId }">
+									<!-- 編集ボタンの実装 -->
+									<input type="submit" value="編集" />
+								</c:if>
+							</form>
+						</div>
 					</div>
 				</c:forEach>
 			</div>
