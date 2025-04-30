@@ -21,17 +21,23 @@
 				</ul>
 			</div>
 		</c:if>
-
-		<!-- Editのpostメソッドに送っている -->
-		<form action="/edit" method="Get">
-			<!-- テキストの表示 -->
-			<textarea name="text" cols="100" rows="5" class="tweet-box">
-			<c:out id="edit" name="edit" value="${edit.text}" />
-			</textarea>
-			<!-- 更新ボタンの実装 -->
-			<input type="submit" value="更新">（140文字まで）
-			<!-- メッセージを更新したいとサーバー側に値を送る -->
-			<input type="hidden" name="edit" value="${edit.id}" />
+		<!-- EditのGetメソッドに送っている -->
+		<form action="edit" method="Get">
+			<div class="messages">
+				<!-- テキストの表示 -->
+				<textarea name="text" cols="100" rows="5" class="tweet-box">
+				<c:out value="${message.text}" />
+				</textarea>
+			</div>
+		</form>
+		<!-- EditのPostメソッドに送っている -->
+		<form action="edit" method="Post">
+			<div class="messages">
+				<!-- メッセージを更新したいとサーバー側に値を送る -->
+				<input type="hidden" name="edit" value="${message.id}" />
+				<!-- 更新ボタンの実装 -->
+				<input type="submit" value="更新">（140文字まで）
+			</div>
 		</form>
 		<div class="copyright">Copyright(c)Furuzono</div>
 	</div>

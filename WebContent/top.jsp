@@ -83,12 +83,13 @@
 							</form>
 						</div>
 						<div class="messages">
-							<!-- ServletのPostメソッドに送ってる -->
+							<!-- ServletのGetメソッドに送ってる -->
 							<form action="edit" method="Get">
-								<!-- ログインしているユーザの投稿のみ表示させる -->
+								<!-- ログインしているユーザの投稿のみに表示させる -->
 								<c:if test="${loginUser.id == message.userId }">
 									<!-- 編集ボタンの実装 -->
 									<input type="submit" value="編集" />
+									<input type="hidden" name="editid" value="${message.id}" />
 								</c:if>
 							</form>
 						</div>

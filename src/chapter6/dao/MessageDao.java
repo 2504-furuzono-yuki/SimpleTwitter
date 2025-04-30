@@ -4,7 +4,10 @@ import static chapter6.utils.CloseableUtil.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +56,7 @@ public class MessageDao {
 			ps.setString(2, message.getText());
 
 			ps.executeUpdate();
+
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
@@ -98,7 +102,9 @@ public class MessageDao {
 			close(ps);
 		}
 	}
-	public void select(Connection connection , int messageid) {
+
+	//EditServletのdoGetで使用(編集画面表示)
+	public Message select(Connection connection , int messageid) {
 
 		//logを書き込んでいる
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -119,10 +125,10 @@ public class MessageDao {
 			ps.setInt(1, messageid);
 
 			//SQLを実行する
-			ps.executeUpdate();
+			ResultSet rs = ps.executeQuery();
 
-			return ;
-
+			List<Message> messages = toUserMessages(rs);
+			return (messages.get(0));
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
@@ -131,7 +137,30 @@ public class MessageDao {
 			close(ps);
 		}
 	}
-	public void updata(Connection connection, int messageid, Message messagetext) {
+	private List<Message> toUserMessages(ResultSet rs) throws SQLException {
+
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {
+				}.getClass().getEnclosingMethod().getName());
+
+		List<Message> messages = new ArrayList<Message>();
+		try {
+			while (rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("user_id"));
+				message.setCreatedDate(rs.getTimestamp("created_date"));
+
+				messages.add(message);
+			}
+			return messages;
+		} finally {
+			close(rs);
+		}
+	}
+	public void updata(Connection connection, String messageid, String messagetext) {
 
 		//logを書き込んでいる
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -141,8 +170,8 @@ public class MessageDao {
 		PreparedStatement ps = null;
 
 		//messageをintに型変換する
-		String Text = messagetext.toString();
-		int message = Integer.parseInt(Text);
+		int text = Integer.parseInt(messagetext);
+		int id = Integer.parseInt(messageid);
 
 		//SQLを動かす文を作成する
 		try {
@@ -156,8 +185,8 @@ public class MessageDao {
 			ps = connection.prepareStatement(sql.toString());
 
 			//?に入れたい値をセットする
-			ps.setInt(1, message);
-			ps.setInt(2, messageid);
+			ps.setInt(1, text);
+			ps.setInt(2, id);
 
 			//SQLを実行する
 			ps.executeUpdate();

@@ -41,6 +41,15 @@ public class EditServlet extends HttpServlet {
 				" : " + new Object() {
 				}.getClass().getEnclosingMethod().getName());
 
+		//requestに値に紐づいているmessageのtextを取得することができる。それをtextという変数に入れる
+		String editid = request.getParameter("editid");
+
+		int editMessageid = Integer.parseInt(editid);
+
+		//MessageServiceを呼び出してselectを依頼する
+		MessageService messageservice = new MessageService();
+		messageservice.select(editMessageid);
+
 		//直接edit.jspを表示させる
 		request.getRequestDispatcher("edit.jsp").forward(request, response);
 	}
@@ -57,11 +66,12 @@ public class EditServlet extends HttpServlet {
 				}.getClass().getEnclosingMethod().getName());
 
 		//requestに値に紐づいているmessageのidを取得することができる。それをeditという変数に入れる
-		String edit = request.getParameter("id");
+		String messageid = request.getParameter("messageid");
+		String messagetext = request.getParameter("messagetext");
 
-		//MessageServiceを呼び出してdeleteを依頼する
+		//MessageServiceを呼び出してupdataを依頼する
 		MessageService messageservice = new MessageService();
-		messageservice.delete(edit);
+		messageservice.updata(messageid, messagetext);
 
 		//TopServletに送ってTop.jspに送る
 		response.sendRedirect("./");

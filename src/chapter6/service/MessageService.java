@@ -161,7 +161,7 @@ public class MessageService {
 		}
 	}
 	//編集したものを更新したいためにupdataメソッドを使用する
-	public void updata(int messageid, Message messagetext) {
+	public void updata(String messageid, String messagetext) {
 
 		//logを書き込んでいる
 		log.info(new Object() {
