@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import chapter6.beans.Message;
 import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
 
@@ -48,8 +49,9 @@ public class EditServlet extends HttpServlet {
 
 		//MessageServiceを呼び出してselectを依頼する
 		MessageService messageservice = new MessageService();
-		messageservice.select(editMessageid);
+		Message  message = messageservice.select(editMessageid);
 
+		request.setAttribute("message", message);
 		//直接edit.jspを表示させる
 		request.getRequestDispatcher("edit.jsp").forward(request, response);
 	}
@@ -71,7 +73,9 @@ public class EditServlet extends HttpServlet {
 
 		//MessageServiceを呼び出してupdataを依頼する
 		MessageService messageservice = new MessageService();
-		messageservice.updata(messageid, messagetext);
+		Message  message = messageservice.updata(messageid, messagetext);
+		
+		request.setAttribute("message", message);
 
 		//TopServletに送ってTop.jspに送る
 		response.sendRedirect("./");

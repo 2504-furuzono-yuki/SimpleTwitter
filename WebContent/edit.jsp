@@ -21,18 +21,13 @@
 				</ul>
 			</div>
 		</c:if>
-		<!-- EditのGetメソッドに送っている -->
-		<form action="edit" method="Get">
+		<!-- EditのPostメソッドに送っている -->
+		<form action="edit" method="Post">
 			<div class="messages">
 				<!-- テキストの表示 -->
 				<textarea name="text" cols="100" rows="5" class="tweet-box">
 				<c:out value="${message.text}" />
 				</textarea>
-			</div>
-		</form>
-		<!-- EditのPostメソッドに送っている -->
-		<form action="edit" method="Post">
-			<div class="messages">
 				<!-- メッセージを更新したいとサーバー側に値を送る -->
 				<input type="hidden" name="edit" value="${message.id}" />
 				<!-- 更新ボタンの実装 -->

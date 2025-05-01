@@ -129,7 +129,7 @@ public class MessageService {
 	}
 
 	//selectメソッドを使用する
-	public void select(int messageid) {
+	public Message select(int messageid) {
 
 		//Connectionを定義してあげる
 		Connection connection = null;
@@ -141,10 +141,10 @@ public class MessageService {
 
 			//Messagedaoを呼び出してパラメータを渡す
 			MessageDao messagedao = new MessageDao();
-			messagedao.select(connection, messageid);
+			Message message = messagedao.select(connection, messageid);
 			commit(connection);
 
-			return ;
+			return message;
 
 		} catch (RuntimeException e) {
 			rollback(connection);

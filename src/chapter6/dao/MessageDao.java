@@ -104,7 +104,7 @@ public class MessageDao {
 	}
 
 	//EditServletのdoGetで使用(編集画面表示)
-	public Message select(Connection connection , int messageid) {
+	public Message select(Connection connection , int id) {
 
 		//logを書き込んでいる
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -116,16 +116,17 @@ public class MessageDao {
 		//SQLを動かす文を作成する
 		try {
 			//SELECTしたいものを指定する
-			String sql = "SELECT FROM messages WHERE id = ?";
+			String sql = "SELECT * FROM messages WHERE id = ?";
 
 			//これからセットしたいSQL文を接続
 			ps = connection.prepareStatement(sql);
 
 			//?に入れたい値をセットする
-			ps.setInt(1, messageid);
+			ps.setInt(1, id);
 
 			//SQLを実行する
 			ResultSet rs = ps.executeQuery();
+
 
 			List<Message> messages = toUserMessages(rs);
 			return (messages.get(0));
@@ -185,7 +186,7 @@ public class MessageDao {
 			ps = connection.prepareStatement(sql.toString());
 
 			//?に入れたい値をセットする
-			ps.setInt(1, text);
+			ps.setString(1, Message.getText());
 			ps.setInt(2, id);
 
 			//SQLを実行する
