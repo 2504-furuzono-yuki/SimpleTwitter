@@ -161,7 +161,7 @@ public class MessageService {
 		}
 	}
 	//編集したものを更新したいためにupdataメソッドを使用する
-	public void updata(String messageid, String messagetext) {
+	public void updata(Message message) {
 
 		//logを書き込んでいる
 		log.info(new Object() {
@@ -173,13 +173,12 @@ public class MessageService {
 		Connection connection = null;
 
 		try {
-
 			//Connectionを定義してあげる
 			connection = getConnection();
 
 			//Messagedaoを呼び出してパラメータを渡す
 			MessageDao messagedao = new MessageDao();
-			messagedao.updata(connection, messageid, messagetext);
+			messagedao.updata(connection, message);
 
 			commit(connection);
 

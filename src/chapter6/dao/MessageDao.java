@@ -161,7 +161,7 @@ public class MessageDao {
 			close(rs);
 		}
 	}
-	public void updata(Connection connection, String messageid, String messagetext) {
+	public void updata(Connection connection, Message message) {
 
 		//logを書き込んでいる
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -171,23 +171,22 @@ public class MessageDao {
 		PreparedStatement ps = null;
 
 		//messageをintに型変換する
-		int text = Integer.parseInt(messagetext);
-		int id = Integer.parseInt(messageid);
+		String message = message.toString();
 
 		//SQLを動かす文を作成する
 		try {
 			//UPDATEしたいものを指定する
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE messages SET");
-			sql.append("    text = ?, ");
 			sql.append("WHERE id = ?");
+			sql.append("    text = ?, ");
 
 			//これからセットしたいSQL文を接続
 			ps = connection.prepareStatement(sql.toString());
 
 			//?に入れたい値をセットする
-			ps.setString(1, Message.getText());
-			ps.setInt(2, id);
+			ps.setString(1, message.getId());
+			ps.setString(2, message.getText());
 
 			//SQLを実行する
 			ps.executeUpdate();
